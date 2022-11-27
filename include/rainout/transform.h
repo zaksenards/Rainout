@@ -1,6 +1,7 @@
 #ifndef RAINOUT_TRANSFORM_H
 #define RAINOUT_TRANSFORM_H
-#include <rainout/Vector.h>
+#include <rainout/vector.h>
+#include <rainout/matrix.h>
 
 namespace rainout
 {
@@ -8,6 +9,7 @@ namespace rainout
     {
         Vec2f rotation;
         Vec2f position;
+        Mat4f matrix;
         Vec2f scale;
     };
 }

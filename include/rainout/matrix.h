@@ -31,6 +31,15 @@ namespace rainout
             return m;
         }
 
+
+        static Mat4f translate(Mat4f matrix, Vec2f translation)
+        {
+            Mat4f m = Mat4f::identity();
+            m.e[3][0] = matrix.e[3][0]+translation.x;
+            m.e[3][1] = matrix.e[3][1]+translation.y;
+            return m;
+        }
+
         void operator=(Mat4f right)
         {
             for(int column = 0; column < 4;column++)

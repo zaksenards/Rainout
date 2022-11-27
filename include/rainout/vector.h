@@ -42,6 +42,12 @@ namespace rainout
             return Vec2f(x+right.x, y+right.y);
         }
 
+        void operator+=(Vec2f right)
+        {
+            x+=right.x;
+            y+=right.y; 
+        }
+
 
         Vec2f operator-(Vec2f right)
         {

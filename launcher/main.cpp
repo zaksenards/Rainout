@@ -2,14 +2,19 @@
 #include <rainout/transform.h>
 #include <rainout/material.h>
 #include <rainout/matrix.h>
+#include <rainout/entity.h>
+#include <rainout/scene.h>
 #include <openglRender.h>
 #include <glfw/glfw3.h>
 #include <cstdlib>
 #include <cstdio>
 
 using rainout::Material;
+using rainout::Entity;
 using rainout::Mat4f;
 using rainout::Vec3f;
+using rainout::Vec2f;
+using rainout::Scene;
 
 int main(void)
 {
@@ -39,37 +44,44 @@ int main(void)
         return -1;
     }
 
+    Entity* player = Scene::createEntity();
+
     rainoutCore::Primitive model = rainoutCore::createPrimitive(rainoutCore::RECTANGLE_PRIMITIVE);
+    Mat4f transform = Mat4f::identity();
     Material material;
     material.color = Vec3f(1.5f, 0.5f, 1.0f);
 
-    Mat4f transform = Mat4f::identity();
+    //FIXME: Two objects sharing the same transform and material when created by Scene
 
     glfwShowWindow(window);
-    rainoutCore::drawColor(0.5, 0.5, 1.0, 1.0);
+    int frames = 0;
+    double previus = glfwGetTime();
+    double dt = 0;
     while(!glfwWindowShouldClose(window))
     {
         glfwPollEvents();
 
+        Vec2f translation;
+        translation.x = (float) -((glfwGetKey(window, GLFW_KEY_A) - glfwGetKey(window, GLFW_KEY_D))*0.5*dt); 
+        translation.y = (float) -((glfwGetKey(window, GLFW_KEY_S) - glfwGetKey(window, GLFW_KEY_W))*0.5*dt);
+        player->translate(translation);
+
+        double current = glfwGetTime();
+        frames++;
+
         rainoutCore::update();
-        if(glfwGetKey(window, GLFW_KEY_D))
-            transform = Mat4f::translate(transform, {0.01f, 0.0f, 0.0f});
-
-        if(glfwGetKey(window, GLFW_KEY_A))
-            transform = Mat4f::translate(transform, {-0.01f, 0.0f, 0.0f});
-
-        if(glfwGetKey(window, GLFW_KEY_W))
-            transform = Mat4f::translate(transform, {0.0f, 0.01f, 0.0f});
-
-        if(glfwGetKey(window, GLFW_KEY_S))
-            transform = Mat4f::translate(transform, {0.0f, -0.01f, 0.0f});
-
-        rainoutCore::render(model, material, transform);
-
+        if(current - previus <= (30.f/1.0f))
+        {
+            dt = current-previus;
+            frames = 0;
+            previus = current;
+            Scene::render();
+            rainoutCore::render(model, material, transform);
+        }
         glfwSwapBuffers(window);
     }
     
-    rainoutCore::deletePrimitive(model);
+    //TODO: Delete entity
 
     glfwTerminate();
     return 0;
