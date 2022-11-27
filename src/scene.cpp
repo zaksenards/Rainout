@@ -19,7 +19,7 @@ namespace rainout
         transform.matrix = matrix;
         entity->setTransform(transform);
         entity->setMaterial(material);
-        entity->setPrimitive(&model);
+        entity->setPrimitive(model);
         nodes.push_back(entity);
 
         return entity;
@@ -29,11 +29,11 @@ namespace rainout
     {
         for(Entity* node : nodes)
         {
-            rainoutCore::Primitive* model = (rainoutCore::Primitive*) node->getPrimitive();
+            rainoutCore::Primitive model = node->getPrimitive();
             Material material = node->getMaterial();
             Transform transform = node->getTransform();
 
-            rainoutCore::render(*model,material,transform.matrix);
+            rainoutCore::render(model,material,transform.matrix);
         }
     }
 }

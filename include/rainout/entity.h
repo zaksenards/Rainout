@@ -5,23 +5,29 @@
 #include <rainout/material.h>
 #include <rainout/transform.h>
 #include <rainout/rainout.h>
+#include <openglRender.h>
 
 namespace rainout
 {
-    struct RAINOUT Entity
+    class RAINOUT Entity
     {
-        void setTransform(Transform transform);
-        Transform getTransform();
+        public:
+            void setTransform(Transform transform);
+            Transform getTransform();
 
-        void setMaterial(Material material);
-        Material getMaterial();
+            void setMaterial(Material material);
+            Material getMaterial();
 
-        const void* getPrimitive();
-        void setPrimitive(const void* primitive);
+            rainoutCore::Primitive getPrimitive();
+            void setPrimitive(rainoutCore::Primitive obj);
 
-        void translate(Vec2f translation);
-        void rotate(Vec2f rotation);
-        void scale(Vec2f scale);
+            void translate(Vec2f translation);
+            void rotate(Vec2f rotation);
+            void scale(Vec2f scale);
+        private:
+            Transform m_transform;
+            Material m_material;
+            rainoutCore::Primitive m_primitive;
     };
 }
 

@@ -1,54 +1,46 @@
 #include <rainout/entity.h>
-#include <openglRender.h>
 
 using rainout::Transform;
 using rainout::Material;
 
 namespace rainout
 {
-    struct
-    {
-        rainoutCore::Primitive primitive;
-        Transform transform;
-        Material material;
-    }_shared;
-
     void Entity::setTransform(Transform transform)
     {
-        _shared.transform = transform;
+        m_transform = transform;
     }
 
     Transform Entity::getTransform()
     {
-        return _shared.transform;
+        return m_transform;
     }
 
     void Entity::setMaterial(Material material)
     {
-        _shared.material = material;
+        m_material = material;
     }
 
     Material Entity::getMaterial()
     {
-        return _shared.material;
+        return m_material;
     }
 
-    const void* Entity::getPrimitive()
+    rainoutCore::Primitive Entity::getPrimitive()
     {
-        return &_shared.primitive; 
+        return m_primitive; 
     }
 
 
-    void Entity::setPrimitive(const void* primitive)
+    void Entity::setPrimitive(rainoutCore::Primitive primitive)
     {
-        _shared.primitive = *(rainoutCore::Primitive*)primitive;
+        m_primitive = primitive;
     }
 
     void Entity::translate(Vec2f translation)
     {
-        _shared.transform.position += translation;
-        _shared.transform.matrix = 
-            Mat4f::translate(_shared.transform.matrix, translation);
+        m_transform.position += translation;
+        m_transform.matrix = 
+            Mat4f::translate(m_transform.matrix, translation);
     }
 
     void Entity::rotate(Vec2f rotation)

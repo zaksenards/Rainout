@@ -45,11 +45,16 @@ int main(void)
     }
 
     Entity* player = Scene::createEntity();
+    Entity* player2 = Scene::createEntity();
+    Entity* player3 = Scene::createEntity();
 
-    rainoutCore::Primitive model = rainoutCore::createPrimitive(rainoutCore::RECTANGLE_PRIMITIVE);
-    Mat4f transform = Mat4f::identity();
+    player2->translate({0.0f, 0.5f});
     Material material;
+    material.color = Vec3f(0.5f, 1.5f, 0.2f);
+    player2->setMaterial(material);
+
     material.color = Vec3f(1.5f, 0.5f, 1.0f);
+    player3->setMaterial(material);
 
     //FIXME: Two objects sharing the same transform and material when created by Scene
 
@@ -76,7 +81,6 @@ int main(void)
             frames = 0;
             previus = current;
             Scene::render();
-            rainoutCore::render(model, material, transform);
         }
         glfwSwapBuffers(window);
     }
