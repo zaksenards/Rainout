@@ -43,15 +43,14 @@ namespace rainout
             Mat4f::translate(m_transform.matrix, translation);
     }
 
-    void Entity::rotate(Vec2f rotation)
-    {
-        //TODO
-        rotation = Vec2f(0.0f, 0.0f);
-    }
-    
     void Entity::scale(Vec2f scale)
     {
-        //TODO
-        scale = Vec2f(0.0f, 0.0f);
+        m_transform.scale += scale;
+        m_transform.matrix = Mat4f::scale(m_transform.matrix, scale);
+    }
+
+    void Entity::setColor(Vec3f color)
+    {
+        m_material.color = color;
     }
 }

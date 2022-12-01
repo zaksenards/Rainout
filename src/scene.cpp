@@ -36,4 +36,10 @@ namespace rainout
             rainoutCore::render(model,material,transform.matrix);
         }
     }
+
+    void Scene::destroy()
+    {
+        for(int i = 0; i < nodes.size(); i++)
+            rainoutCore::deletePrimitive(nodes.at(i)->getPrimitive());
+    }
 }

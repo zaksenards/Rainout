@@ -7,7 +7,7 @@ namespace rainout
 {
     struct Transform
     {
-        Vec2f rotation;
+        float rotation;
         Vec2f position;
         Mat4f matrix;
         Vec2f scale;

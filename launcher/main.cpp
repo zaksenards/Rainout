@@ -3,15 +3,14 @@
 #include <rainout/material.h>
 #include <rainout/matrix.h>
 #include <rainout/entity.h>
+#include <rainout/vector.h>
 #include <rainout/scene.h>
 #include <openglRender.h>
 #include <glfw/glfw3.h>
 #include <cstdlib>
 #include <cstdio>
 
-using rainout::Material;
 using rainout::Entity;
-using rainout::Mat4f;
 using rainout::Vec3f;
 using rainout::Vec2f;
 using rainout::Scene;
@@ -45,18 +44,6 @@ int main(void)
     }
 
     Entity* player = Scene::createEntity();
-    Entity* player2 = Scene::createEntity();
-    Entity* player3 = Scene::createEntity();
-
-    player2->translate({0.0f, 0.5f});
-    Material material;
-    material.color = Vec3f(0.5f, 1.5f, 0.2f);
-    player2->setMaterial(material);
-
-    material.color = Vec3f(1.5f, 0.5f, 1.0f);
-    player3->setMaterial(material);
-
-    //FIXME: Two objects sharing the same transform and material when created by Scene
 
     glfwShowWindow(window);
     int frames = 0;
@@ -84,9 +71,9 @@ int main(void)
         }
         glfwSwapBuffers(window);
     }
-    
-    //TODO: Delete entity
 
+    Scene::destroy();
+    
     glfwTerminate();
     return 0;
 }

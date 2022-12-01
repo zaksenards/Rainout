@@ -21,12 +21,12 @@ namespace rainout
             rainoutCore::Primitive getPrimitive();
             void setPrimitive(rainoutCore::Primitive obj);
 
+            void setColor(Vec3f color);
             void translate(Vec2f translation);
-            void rotate(Vec2f rotation);
             void scale(Vec2f scale);
         private:
-            Transform m_transform;
             Material m_material;
+            Transform m_transform;
             rainoutCore::Primitive m_primitive;
     };
 }

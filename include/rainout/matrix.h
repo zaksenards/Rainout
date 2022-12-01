@@ -2,14 +2,13 @@
 #define RAINOUT_MATRIX_H
 #include <rainout/vector.h>
 #include <cstdio>
+#include <cmath>
 
 namespace rainout
 {
     struct Mat4f
     {
         float e[4][4];
-
-        //TODO: Implement translation, scale and rotation functions
 
         Mat4f()
         {
@@ -22,15 +21,21 @@ namespace rainout
             }
         }
 
-        static Mat4f translate(Mat4f matrix, Vec3f translation)
+        static Mat4f scale(Mat4f matrix, Vec2f scale)
         {
             Mat4f m = Mat4f::identity();
-            m.e[3][0] = matrix.e[3][0]+translation.x;
-            m.e[3][1] = matrix.e[3][1]+translation.y;
-            m.e[3][2] = matrix.e[3][2]+translation.z;
+            m.e[0][0] = matrix.e[0][0]+scale.x;
+            m.e[1][1] = matrix.e[1][1]+scale.y;
             return m;
         }
 
+        static Mat4f rotate(Mat4f matrix, Vec2f rotation)
+        {
+            Mat4f m = Mat4f::identity();
+            m.e[0][0] =  cos(matrix.e[0][0])*rotation.x;
+            m.e[2][0] = -sin(matrix.e[2][0])*rotation.x;
+            return m;
+        }
 
         static Mat4f translate(Mat4f matrix, Vec2f translation)
         {
@@ -124,8 +129,6 @@ namespace rainout
                 }
             }
         }
-
-
 
         Mat4f operator*(Mat4f right)
         {

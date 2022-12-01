@@ -10,6 +10,7 @@ namespace rainout
     {
         static Entity* createEntity();
         static void render();
+        static void destroy();
     };
 }
 
