@@ -39,6 +39,7 @@ struct RAINOUT_CORE rainoutCore
 
     struct Primitive
     {
+        uint32_t text;
         uint32_t vao;
         uint32_t vbo;
         uint32_t ebo;
