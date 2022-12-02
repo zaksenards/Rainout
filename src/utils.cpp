@@ -3,7 +3,7 @@
 #include <cstdlib>
 #include <cstdio>
 
-namespace Rainout
+namespace rainout
 {
     char* Utils::loadFileToBuffer(const char* filePath)
     {
@@ -60,20 +60,5 @@ namespace Rainout
 
         buffer[bytes-1] = '\0';
         return buffer;
-    }
-
-    Texture* Utils::loadTexture(const char* filePath)
-    {
-        char* binary = loadBinaryToBuffer(filePath);
-        if(!binary)
-            return nullptr;
-
-        Texture* texture = new Texture;
-        BitmapHeader* bitmap = (BitmapHeader*)binary;
-        texture->width = bitmap->width;
-        texture->height = bitmap->height;
-        texture->data = binary+sizeof(BitmapHeader);
-
-        return texture;
     }
 }

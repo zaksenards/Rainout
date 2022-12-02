@@ -19,5 +19,5 @@ a smol OpenGL 2D game engine
 
 ## FIXME
 - [ ] Texture system
-    - [ ] Move bitmap header and Texture definitions to Resource manager header
+    - [X] Move bitmap header and Texture definitions to Resource manager header
     - [ ] Fix wrong color format when loading images

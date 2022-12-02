@@ -34,8 +34,10 @@ set(RAINOUT_CORE_SOURCES
 )
 
 set(RAINOUT_ENGINE_SOURCES
+    ${RAINOUT_SOURCE_DIR}/utils.cpp
     ${RAINOUT_SOURCE_DIR}/entity.cpp
     ${RAINOUT_SOURCE_DIR}/scene.cpp
+    ${RAINOUT_SOURCE_DIR}/assetManager.cpp
 )
 
 add_subdirectory(${RAINOUT_3RDPARTY}/glfw)

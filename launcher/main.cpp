@@ -1,4 +1,5 @@
 #define GLFW_INCLUDE_NONE
+#include <rainout/assetManager.h>
 #include <rainout/transform.h>
 #include <rainout/material.h>
 #include <rainout/matrix.h>
@@ -10,6 +11,8 @@
 #include <cstdlib>
 #include <cstdio>
 
+using rainout::AssetManager;
+using rainout::Texture;
 using rainout::Entity;
 using rainout::Vec3f;
 using rainout::Vec2f;
@@ -43,7 +46,8 @@ int main(void)
         return -1;
     }
 
-    Entity* player = Scene::createEntity();
+    Texture* texture = AssetManager::loadTexture("res/Player.bmp");
+    Entity* player = Scene::createEntity(texture);
 
     glfwShowWindow(window);
     int frames = 0;

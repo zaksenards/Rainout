@@ -4,6 +4,7 @@
 
 #define RAINOUT_IMPLEMENTATION
 #define RAINOUT_PLATFORM_WINDOWS
+#include <rainout/assetManager.h>
 #include <rainout/material.h>
 #include <rainout/vector.h>
 #include <rainout/matrix.h>
@@ -51,8 +52,11 @@ struct RAINOUT_CORE rainoutCore
 
     static uint32_t compileShader(uint8_t shaderType, char* source);
     static uint32_t compileProgram(uint32_t vertex, uint32_t fragment);
+    
     static Primitive createPrimitive(uint8_t type);
     static void deletePrimitive(Primitive primitive);
+    static void setPrimitiveTexture(Primitive* primitive, rainout::Texture* texture);
+
     static void render(Primitive primitive, rainout::Material material, rainout::Mat4f matrix);
     static void render(Primitive primitive);
 

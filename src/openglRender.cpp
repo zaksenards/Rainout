@@ -10,13 +10,15 @@ struct
     uint32_t fragment;
 }_shared;
 
+using rainout::Texture;
+
 bool rainoutCore::init(void* proc)
 {
     if(!gladLoadGLLoader((GLADloadproc)proc))
         return false;
 
-    char* vshader = Rainout::Utils::loadFileToBuffer("res/vertex.glsl");
-    char* fshader = Rainout::Utils::loadFileToBuffer("res/fragment.glsl");
+    char* vshader = rainout::Utils::loadFileToBuffer("res/vertex.glsl");
+    char* fshader = rainout::Utils::loadFileToBuffer("res/fragment.glsl");
 
     uint32_t vertex = compileShader(VERTEX_SHADER_TYPE, vshader);
     uint32_t fragment = compileShader(FRAGMENT_SHADER_TYPE, fshader);
@@ -37,7 +39,7 @@ void rainoutCore::drawColor(float R, float G, float B, float A)
 
 rainoutCore::Primitive rainoutCore::createPrimitive(uint8_t primitiveType)
 {
-    uint32_t vbo, vao, ebo, text;
+    uint32_t vbo, vao, ebo;
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
 
@@ -47,9 +49,9 @@ rainoutCore::Primitive rainoutCore::createPrimitive(uint8_t primitiveType)
     float vertices[20] = 
     {
         -0.05f, -0.05f, 0.0f, 0.0f, 0.0f,
-         0.05f, -0.05f, 0.0f, 0.1f, 0.0f,
-         0.05f,  0.05f, 0.0f, 0.1f, 0.1f,
-        -0.05f,  0.05f, 0.0f, 0.0f, 0.1f,
+         0.05f, -0.05f, 0.0f, 1.0f, 0.0f,
+         0.05f,  0.05f, 0.0f, 1.0f, 1.0f,
+        -0.05f,  0.05f, 0.0f, 0.0f, 1.0f,
     };
 
     uint32_t indexes[6] = 
@@ -69,6 +71,23 @@ rainoutCore::Primitive rainoutCore::createPrimitive(uint8_t primitiveType)
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indexes), indexes, GL_STATIC_DRAW);
 
+    Primitive primitive;
+    primitive.vao = vao;
+    primitive.vbo = vbo;
+    primitive.ebo = ebo;
+    primitive.id = compileProgram(_shared.vertex, _shared.fragment);
+    primitive.text = 0;
+
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+    return primitive;
+}
+
+void rainoutCore::setPrimitiveTexture(Primitive* primitive, Texture* texture)
+{
+    uint32_t text;
     glGenTextures(1, &text);
     glBindTexture(GL_TEXTURE_2D, text);
 
@@ -81,31 +100,23 @@ rainoutCore::Primitive rainoutCore::createPrimitive(uint8_t primitiveType)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    Texture* texture = Rainout::Utils::loadTexture("res/Player.bmp");
-    printf("width: %d, height: %d\n",texture->width, texture->height);
-    uint32_t* data = (uint32_t*)texture->data;
-
-    if(data)
-    {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texture->width, texture->height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-    }
-
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void*)(3*sizeof(float)));
     glEnableVertexAttribArray(1);
 
-    Primitive primitive;
-    primitive.vao = vao;
-    primitive.vbo = vbo;
-    primitive.ebo = ebo;
-    primitive.id = compileProgram(_shared.vertex, _shared.fragment);
-    primitive.text = text;
+    uint32_t* data = (uint32_t*)texture->data;
+    int width = texture->width;
+    int height = texture->height;
 
-    glBindVertexArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    GLenum textureFormat = GL_RGBA;
+    GLenum textureType = GL_UNSIGNED_BYTE;
 
-    return primitive;
+    if(data)
+    {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, textureFormat, textureType, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+    }
+
+    primitive->text = text; 
 }
 
 void rainoutCore::deletePrimitive(Primitive primitive)
@@ -130,11 +141,13 @@ void rainoutCore::render(Primitive primitive, rainout::Material material, rainou
     
     uint32_t colorIndex = glGetUniformLocation(primitive.id,"vColor");
     uint32_t transformIndex = glGetUniformLocation(primitive.id, "transform");
+    uint32_t renderTexture = glGetUniformLocation(primitive.id, "useTexture");
 
     glUseProgram(primitive.id);
     glBindVertexArray(primitive.vao);
     glUniform4f(colorIndex, color.x, color.y, color.z, 1.0f);
     glUniformMatrix4fv(transformIndex, 1, GL_FALSE, (const float*)matrix.e);
+    glUniform1i(renderTexture, primitive.text != 0);
     glBindTexture(GL_TEXTURE_2D, primitive.text);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }

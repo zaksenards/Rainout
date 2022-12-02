@@ -7,6 +7,11 @@ namespace rainout
 
     Entity* Scene::createEntity()
     {
+        return createEntity(nullptr);
+    }
+
+    Entity* Scene::createEntity(Texture* texture)
+    {
         Entity* entity = new Entity;
         rainoutCore::Primitive model = 
             rainoutCore::createPrimitive(rainoutCore::RECTANGLE_PRIMITIVE);
@@ -20,6 +25,7 @@ namespace rainout
         entity->setTransform(transform);
         entity->setMaterial(material);
         entity->setPrimitive(model);
+        entity->setTexture(texture);
         nodes.push_back(entity);
 
         return entity;

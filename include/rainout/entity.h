@@ -1,5 +1,6 @@
 #ifndef entity_h
 #define entity_h
+#include <rainout/assetManager.h>
 #include <rainout/matrix.h>
 #include <rainout/vector.h>
 #include <rainout/material.h>
@@ -21,10 +22,13 @@ namespace rainout
             rainoutCore::Primitive getPrimitive();
             void setPrimitive(rainoutCore::Primitive obj);
 
+            void setTexture(Texture* texture);
+
             void setColor(Vec3f color);
             void translate(Vec2f translation);
             void scale(Vec2f scale);
         private:
+            Texture* m_texture;
             Material m_material;
             Transform m_transform;
             rainoutCore::Primitive m_primitive;
