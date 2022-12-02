@@ -6,6 +6,7 @@ a smol OpenGL 2D game engine
 
 - [ ] Texture System
     - [X] Implement a basic texture system
+    - [ ] Support 24 and 32 bit images
     - [ ] Support more image file formats
     - [ ] Support transparent textures
 - [ ] Collision System  
@@ -18,6 +19,6 @@ a smol OpenGL 2D game engine
 - [ ] Light System
 
 ## FIXME
-- [ ] Texture system
+- [X] Texture system
     - [X] Move bitmap header and Texture definitions to Resource manager header
-    - [ ] Fix wrong color format when loading images
+    - [X] Fix wrong color format when loading images
