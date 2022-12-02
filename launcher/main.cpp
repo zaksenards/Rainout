@@ -49,6 +49,10 @@ int main(void)
     Texture* texture = AssetManager::loadTexture("res/Player.bmp");
     Entity* player = Scene::createEntity(texture);
 
+    texture = AssetManager::loadTexture("res/red.bmp");
+    Entity* redPlayer = Scene::createEntity(texture);
+    redPlayer->translate(Vec2f(-0.5f, 0.3f));
+
     glfwShowWindow(window);
     int frames = 0;
     double previus = glfwGetTime();

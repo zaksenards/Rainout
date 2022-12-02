@@ -48,10 +48,10 @@ rainoutCore::Primitive rainoutCore::createPrimitive(uint8_t primitiveType)
 
     float vertices[20] = 
     {
-        -0.05f, -0.05f, 0.0f, 0.0f, 0.0f,
-         0.05f, -0.05f, 0.0f, 1.0f, 0.0f,
-         0.05f,  0.05f, 0.0f, 1.0f, 1.0f,
-        -0.05f,  0.05f, 0.0f, 0.0f, 1.0f,
+        -0.06f, -0.06f, 0.0f, 0.0f, 0.0f,
+         0.06f, -0.06f, 0.0f, 1.0f, 0.0f,
+         0.06f,  0.06f, 0.0f, 1.0f, 1.0f,
+        -0.06f,  0.06f, 0.0f, 0.0f, 1.0f,
     };
 
     uint32_t indexes[6] = 
@@ -66,6 +66,10 @@ rainoutCore::Primitive rainoutCore::createPrimitive(uint8_t primitiveType)
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
+
+    // Texture cordinates
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void*)(3*sizeof(float)));
+    glEnableVertexAttribArray(1);
 
     glGenBuffers(1, &ebo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
@@ -100,9 +104,6 @@ void rainoutCore::setPrimitiveTexture(Primitive* primitive, Texture* texture)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void*)(3*sizeof(float)));
-    glEnableVertexAttribArray(1);
-
     uint32_t* data = (uint32_t*)texture->data;
     int width = texture->width;
     int height = texture->height;
@@ -110,11 +111,28 @@ void rainoutCore::setPrimitiveTexture(Primitive* primitive, Texture* texture)
     GLenum textureFormat = GL_RGBA;
     GLenum textureType = GL_UNSIGNED_BYTE;
 
+    switch(texture->bitCount)
+    {
+        case 16:
+        {
+            textureFormat = GL_RGB;
+            textureType = GL_UNSIGNED_SHORT_5_6_5;
+            break;
+        }
+        case 24:
+        {
+          textureFormat = GL_RGB;
+          textureType = GL_UNSIGNED_BYTE;
+          break;
+        }
+    }
+
     if(data)
     {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, textureFormat, textureType, data);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, textureFormat, textureType, data);
         glGenerateMipmap(GL_TEXTURE_2D);
     }
+
 
     primitive->text = text; 
 }

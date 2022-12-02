@@ -22,10 +22,10 @@ struct BitmapHeader
     uint32_t yPelsPerMeter; // Specifies the vertical resolution, in pixels per meter, of the target device for the bitmap
     uint32_t clrUsed;       // Specifies the number of color indexes in the color table that are actually used by the bitmap
     uint32_t clrImportant;  // Specifies the number of color indexes required for displaying the bitmap.
-    uint32_t colorRed;
-    uint32_t colorGren;
-    uint32_t colorBlue;
-    uint32_t colorAlpha;
+    uint8_t red;
+    uint8_t green;
+    uint8_t blue;
+    uint8_t alpha;
 };
 #pragma pack(pop)
 

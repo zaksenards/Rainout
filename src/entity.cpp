@@ -35,10 +35,6 @@ namespace rainout
         if(!texture)
             return;
 
-        printf("Texture width: %d\n",texture->width);
-        printf("Texture height: %d\n",texture->height);
-        printf("Texture bit count: %d\n",texture->bitCount);
-
         m_texture = texture;
         rainoutCore::setPrimitiveTexture(&m_primitive, texture);
     }
