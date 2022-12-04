@@ -29,19 +29,33 @@ namespace rainout
             return m;
         }
 
-        static Mat4f rotate(Mat4f matrix, Vec2f rotation)
-        {
-            Mat4f m = Mat4f::identity();
-            m.e[0][0] =  cos(matrix.e[0][0])*rotation.x;
-            m.e[2][0] = -sin(matrix.e[2][0])*rotation.x;
-            return m;
-        }
-
         static Mat4f translate(Mat4f matrix, Vec2f translation)
         {
             Mat4f m = Mat4f::identity();
             m.e[3][0] = matrix.e[3][0]+translation.x;
             m.e[3][1] = matrix.e[3][1]+translation.y;
+            return m;
+        }
+
+        static Mat4f rotate(Vec3f rotation, float angle)
+        {
+            Mat4f m = Mat4f::identity();
+            const float c = (float)cos(angle);
+            const float s = (float)sin(angle);
+            const float d = (float)1-c;
+
+            m.e[0][0] = rotation.x*rotation.x*d+c;
+            m.e[1][0] = rotation.x*rotation.y*d+rotation.z*s;
+            m.e[2][0] = rotation.x*rotation.z*d-rotation.y*s; 
+
+            m.e[0][1] = rotation.y*rotation.x*d-rotation.z*s;
+            m.e[1][1] = rotation.y*rotation.y*d+c;
+            m.e[2][1] = rotation.y*rotation.z*d+rotation.x*s;
+
+            m.e[0][2] = rotation.z*rotation.z*d+rotation.y*s;
+            m.e[1][2] = rotation.z*rotation.y*d-rotation.x*s;
+            m.e[2][2] = rotation.z*rotation.z*d+c;
+
             return m;
         }
 

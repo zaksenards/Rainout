@@ -68,6 +68,13 @@ namespace rainout
             y = right.y;
             z = right.z;
         }
+
+        void operator+=(Vec3f right)
+        {
+            x+=right.x;
+            y+=right.y; 
+            z+=right.z;
+        }
     };
 }
 

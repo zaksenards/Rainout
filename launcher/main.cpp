@@ -10,12 +10,15 @@
 #include <glfw/glfw3.h>
 #include <cstdlib>
 #include <cstdio>
+#include <math.h>
 
 using rainout::AssetManager;
+using rainout::Material;
 using rainout::Texture;
 using rainout::Entity;
 using rainout::Vec3f;
 using rainout::Vec2f;
+using rainout::Mat4f;
 using rainout::Scene;
 
 int main(void)
@@ -49,14 +52,17 @@ int main(void)
     Texture* texture = AssetManager::loadTexture("res/Player.bmp");
     Entity* player = Scene::createEntity(texture);
 
+
     texture = AssetManager::loadTexture("res/red.bmp");
-    Entity* redPlayer = Scene::createEntity(texture);
-    redPlayer->translate(Vec2f(-0.5f, 0.3f));
+    Entity* red = Scene::createEntity(texture);
+    red->translate(Vec2f(-0.5f, 0.2f));
 
     glfwShowWindow(window);
     int frames = 0;
     double previus = glfwGetTime();
     double dt = 0;
+
+    float angle = 10;
     while(!glfwWindowShouldClose(window))
     {
         glfwPollEvents();
@@ -75,6 +81,9 @@ int main(void)
             dt = current-previus;
             frames = 0;
             previus = current;
+
+            angle+=0.1f;
+            red->rotate(Vec2f(0.0f, 1.0f),angle);
             Scene::render();
         }
         glfwSwapBuffers(window);

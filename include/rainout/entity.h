@@ -27,6 +27,7 @@ namespace rainout
             void setColor(Vec3f color);
             void translate(Vec2f translation);
             void scale(Vec2f scale);
+            void rotate(Vec2f rotation, float angle);
         private:
             Texture* m_texture;
             Material m_material;
