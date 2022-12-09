@@ -70,6 +70,7 @@ int main(void)
         Vec2f translation;
         translation.x = (float) -((glfwGetKey(window, GLFW_KEY_A) - glfwGetKey(window, GLFW_KEY_D))*0.5*dt); 
         translation.y = (float) -((glfwGetKey(window, GLFW_KEY_S) - glfwGetKey(window, GLFW_KEY_W))*0.5*dt);
+
         player->translate(translation);
 
         double current = glfwGetTime();
@@ -82,8 +83,14 @@ int main(void)
             frames = 0;
             previus = current;
 
+            if(glfwGetKey(window, GLFW_KEY_D))
+                player->rotate(Vec2f(0.0f, 1.0f), 3.1415f);
+            else if(glfwGetKey(window, GLFW_KEY_A))
+                player->rotate(Vec2f(0.0f, 1.0f), 0.0f);
+
             angle+=0.1f;
             red->rotate(Vec2f(0.0f, 1.0f),angle);
+            red->translate(Vec2f(sin(glfwGetTime())*0.5f*dt, 0.0f));
             Scene::render();
         }
         glfwSwapBuffers(window);

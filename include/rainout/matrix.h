@@ -31,15 +31,13 @@ namespace rainout
 
         static Mat4f translate(Mat4f matrix, Vec2f translation)
         {
-            Mat4f m = Mat4f::identity();
-            m.e[3][0] = matrix.e[3][0]+translation.x;
-            m.e[3][1] = matrix.e[3][1]+translation.y;
-            return m;
+            matrix.e[3][0] = matrix.e[3][0]+translation.x;
+            matrix.e[3][1] = matrix.e[3][1]+translation.y;
+            return matrix;
         }
 
-        static Mat4f rotate(Vec3f rotation, float angle)
+        static Mat4f rotate(Mat4f m, Vec3f rotation, float angle)
         {
-            Mat4f m = Mat4f::identity();
             const float c = (float)cos(angle);
             const float s = (float)sin(angle);
             const float d = (float)1-c;

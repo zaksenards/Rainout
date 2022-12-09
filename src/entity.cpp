@@ -47,14 +47,14 @@ namespace rainout
     void Entity::translate(Vec2f translation)
     {
         m_transform.position += translation;
-        m_transform.matrix = 
+        m_transform.matrix =
             Mat4f::translate(m_transform.matrix, translation);
     }
 
     void Entity::rotate(Vec2f rotation, float angle)
     {
         m_transform.rotation += Vec3f(rotation.x, rotation.y, 0.0f);
-        m_transform.matrix = Mat4f::rotate(Vec3f(rotation.x, rotation.y, 0.0f), angle);
+        m_transform.matrix = Mat4f::rotate(m_transform.matrix, Vec3f(rotation.x, rotation.y, 0.0f), angle);
     }
 
     void Entity::scale(Vec2f scale)

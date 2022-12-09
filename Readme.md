@@ -17,6 +17,7 @@ a smol OpenGL 2D game engine
 - [ ] Camera system
 - [ ] GridMap system
 - [ ] Light System
+- [ ] Sound system
 
 ## FIXME
 - [X] Texture system
