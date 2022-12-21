@@ -1,13 +1,6 @@
-#define GLFW_INCLUDE_NONE
-#include <rainout/assetManager.h>
-#include <rainout/transform.h>
-#include <rainout/material.h>
-#include <rainout/matrix.h>
-#include <rainout/entity.h>
-#include <rainout/vector.h>
-#include <rainout/scene.h>
+#include <rainout/engine.h>
+#include <rainout/window.h>
 #include <openglRender.h>
-#include <glfw/glfw3.h>
 #include <cstdlib>
 #include <cstdio>
 #include <math.h>
@@ -20,84 +13,77 @@ using rainout::Vec3f;
 using rainout::Vec2f;
 using rainout::Mat4f;
 using rainout::Scene;
+using rainout::Window;
 
 int main(void)
 {
-    if(!glfwInit())
+    // Get game DLL function pointers
+    HMODULE gameModule = LoadLibrary("rainout_game.dll");
+    if(!gameModule)
     {
-        fprintf(stderr, "Can't initialize API\n");
+        fprintf(stderr, "Can't load game DLL\n");
         return -1;
     }
 
-    glfwWindowHint(GLFW_VISIBLE, false);
-    glfwWindowHint(GLFW_DOUBLEBUFFER, true);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 0x3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0x2);
-    
-    GLFWwindow* window = glfwCreateWindow(800, 600, "Rainout", 0, 0);
-    if(!window)
+    ON_INIT_CALLBACK onInit = (ON_INIT_CALLBACK)GetProcAddress(gameModule, ON_INIT_FUNCTION_NAME);
+    ON_STOP_CALLBACK onStop = (ON_STOP_CALLBACK)GetProcAddress(gameModule, ON_STOP_FUNCTION_NAME); 
+    ON_START_CALLBACK onStart = (ON_START_CALLBACK)GetProcAddress(gameModule, ON_START_FUNCTION_NAME); 
+    ON_UPDATE_CALLBACK onUpdate = (ON_UPDATE_CALLBACK)GetProcAddress(gameModule, ON_UPDATE_FUNCTION_NAME);
+
+    if(!onStart || !onStop || !onUpdate || !onInit)
+    {
+        fprintf(stderr, "Can't load game functions\n");
+        return -1;
+    }
+
+    if(!Window::init())
+    {
+        fprintf(stderr, "Can't initialize window\n");
+        return -1;
+    }
+
+    int windowWith = 800, windowHeight = 600;
+    onInit(&windowWith, &windowHeight);
+    if(!Window::createWindow(windowWith, windowHeight, "Rainout"))
     {
         fprintf(stderr, "Can't create window\n");
         return -1;
     }
 
-    glfwMakeContextCurrent(window);
-
-    if(!rainoutCore::init(glfwGetProcAddress))
+    if(!rainoutCore::init(Window::getAddress()))
     {
         fprintf(stderr, "Can't initialize Renderer\n");
         return -1;
     }
 
-    Texture* texture = AssetManager::loadTexture("res/Player.bmp");
-    Entity* player = Scene::createEntity(texture);
+    onStart();
 
-
-    texture = AssetManager::loadTexture("res/red.bmp");
-    Entity* red = Scene::createEntity(texture);
-    red->translate(Vec2f(-0.5f, 0.2f));
-
-    glfwShowWindow(window);
     int frames = 0;
-    double previus = glfwGetTime();
-    double dt = 0;
+    double previus = Window::getTime(); 
+    float dt = 0;
 
-    float angle = 10;
-    while(!glfwWindowShouldClose(window))
+    Window::showWindow(true);
+    while(!Window::shouldClose())
     {
-        glfwPollEvents();
+        Window::update();
 
-        Vec2f translation;
-        translation.x = (float) -((glfwGetKey(window, GLFW_KEY_A) - glfwGetKey(window, GLFW_KEY_D))*0.5*dt); 
-        translation.y = (float) -((glfwGetKey(window, GLFW_KEY_S) - glfwGetKey(window, GLFW_KEY_W))*0.5*dt);
-
-        player->translate(translation);
-
-        double current = glfwGetTime();
+        double current = Window::getTime();
         frames++;
 
         rainoutCore::update();
         if(current - previus <= (30.f/1.0f))
         {
-            dt = current-previus;
+            dt = (float) current-previus;
             frames = 0;
             previus = current;
-
-            if(glfwGetKey(window, GLFW_KEY_D))
-                player->rotate(Vec2f(0.0f, 1.0f), 3.1415f);
-            else if(glfwGetKey(window, GLFW_KEY_A))
-                player->rotate(Vec2f(0.0f, 1.0f), 0.0f);
-
-            angle+=0.1f;
-            red->rotate(Vec2f(0.0f, 1.0f),angle);
-            red->translate(Vec2f(sin(glfwGetTime())*0.5f*dt, 0.0f));
             Scene::render();
         }
-        glfwSwapBuffers(window);
+        onUpdate(dt);
+        Window::swapBuffers();
     }
 
     Scene::destroy();
-    
-    glfwTerminate();
+    onStop();
+    Window::stop();
     return 0;
 }

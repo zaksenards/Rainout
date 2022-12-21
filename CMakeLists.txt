@@ -38,23 +38,35 @@ set(RAINOUT_ENGINE_SOURCES
     ${RAINOUT_SOURCE_DIR}/entity.cpp
     ${RAINOUT_SOURCE_DIR}/scene.cpp
     ${RAINOUT_SOURCE_DIR}/assetManager.cpp
+    ${RAINOUT_SOURCE_DIR}/window.cpp
 )
 
 add_subdirectory(${RAINOUT_3RDPARTY}/glfw)
 
+# Raintout code libraries
 add_library(rainout_render SHARED ${RAINOUT_CORE_SOURCES})
 target_include_directories(rainout_render PRIVATE ${RAINOUT_CORE_INCLUDES})
 target_include_directories(rainout_render PRIVATE ${RAINOUT_INCLUDES})
 
+# Rainout engine libraries
 add_library(rainout_engine SHARED ${RAINOUT_ENGINE_SOURCES})
 target_include_directories(rainout_engine PRIVATE ${RAINOUT_INCLUDES})
 target_include_directories(rainout_engine PRIVATE ${RAINOUT_CORE_INCLUDES})
-target_link_libraries(rainout_engine rainout_render)
+target_link_libraries(rainout_engine glfw rainout_render)
 
+# Rainout final game
+add_library(rainout_game SHARED ${CMAKE_SOURCE_DIR}/tests/game.cpp)
+target_include_directories(rainout_game PRIVATE ${RAINOUT_INCLUDES})
+target_include_directories(rainout_game PRIVATE ${RAINOUT_CORE_INCLUDES})
+target_include_directories(rainout_game PRIVATE ${RAINOUT_INCLUDES})
+target_link_libraries(rainout_game glfw rainout_engine)
+
+# Rainout launcher
 add_executable(Launcher ${CMAKE_SOURCE_DIR}/launcher/main.cpp ${RAINOUT_SOURCES})
 target_include_directories(Launcher PRIVATE ${RAINOUT_CORE_INCLUDES})
 target_include_directories(Launcher PRIVATE ${RAINOUT_INCLUDES})
-target_link_libraries(Launcher glfw rainout_engine rainout_render)
+target_link_libraries(Launcher rainout_engine rainout_render)
 
+# Rainout tests
 add_executable(test_matrix ${CMAKE_SOURCE_DIR}/tests/matrix.cpp)
 target_include_directories(test_matrix PRIVATE ${RAINOUT_INCLUDES})
