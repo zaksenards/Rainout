@@ -61,6 +61,8 @@ namespace rainoutCore
         static void render(Primitive primitive);
 
         static void drawColor(float R, float G, float B, float A);
+        static void glRender::drawColor(rainout::Vec3f color);
+
         static void update();
     };
 }

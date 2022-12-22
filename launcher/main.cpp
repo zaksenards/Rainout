@@ -44,9 +44,10 @@ int main(void)
         return -1;
     }
 
-    int windowWith = 800, windowHeight = 600;
-    onInit(&windowWith, &windowHeight);
-    if(!WindowManager::createWindow(windowWith, windowHeight, "Rainout"))
+    GameSettings settings;
+
+    onInit(&settings);
+    if(!WindowManager::createWindow(settings.width, settings.height, settings.title))
     {
         fprintf(stderr, "Can't create window\n");
         return -1;
@@ -64,7 +65,7 @@ int main(void)
     double previus = WindowManager::getTime(); 
     float dt = 0;
 
-    glRender::drawColor(0.5f, 0.5f, 1.0f, 1.0f);
+    glRender::drawColor(settings.backColor);
     WindowManager::showWindow(true);
     while(!WindowManager::shouldClose())
     {

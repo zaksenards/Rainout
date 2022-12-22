@@ -8,6 +8,7 @@ using rainout::Texture;
 using rainout::Entity;
 using rainout::Scene;
 using rainout::Vec2f;
+using rainout::Vec3f;
 
 struct Character
 {
@@ -34,10 +35,12 @@ struct Character
 Character* player;
 Character* banner;
 
-void onInit(int* width, int* height)
+void onInit(GameSettings* settings)
 {
-    *width = 800;
-    *height = 600;
+    settings->title = (char*)"Character controller";
+    settings->height = 600;
+    settings->width = 800;
+    settings->backColor = Vec3f(0.2, 0.2, 0.4);
 }
 
 void onStart()

@@ -34,6 +34,12 @@ namespace rainoutCore
         return true;
     }
 
+
+    void glRender::drawColor(rainout::Vec3f color)
+    {
+        glRender::drawColor(color.x, color.y, color.z, 1.0);
+    }
+
     void glRender::drawColor(float R, float G, float B, float A)
     {
         glClearColor(R,G,B,A);
