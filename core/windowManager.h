@@ -17,18 +17,21 @@
     #endif
 #endif
 
-struct RAINOUT_CORE WindowManager 
+namespace rainoutCore
 {
-    static bool init();
-    static bool createWindow(const int width, const int height, const char* title);
-    static void showWindow(bool value);
-    static bool shouldClose();
-    static void* getAddress();
-    static double getTime();
-    static int getKeyState(int key);
-    static void stop();
-    static void update();
-    static void swapBuffers();
-};
+    struct RAINOUT_CORE WindowManager 
+    {
+        static bool init();
+        static bool createWindow(const int width, const int height, const char* title);
+        static void showWindow(bool value);
+        static bool shouldClose();
+        static void* getAddress();
+        static double getTime();
+        static int getKeyState(int key);
+        static void stop();
+        static void update();
+        static void swapBuffers();
+    };
+}
 
 #endif

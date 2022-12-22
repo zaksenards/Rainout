@@ -6,6 +6,8 @@
 #include <cstdio>
 #include <math.h>
 
+using rainoutCore::WindowManager;
+using rainoutCore::glRender;
 using rainout::AssetManager;
 using rainout::Material;
 using rainout::Texture;
@@ -50,7 +52,7 @@ int main(void)
         return -1;
     }
 
-    if(!rainoutCore::init(WindowManager::getAddress()))
+    if(!glRender::init(WindowManager::getAddress()))
     {
         fprintf(stderr, "Can't initialize Renderer\n");
         return -1;
@@ -62,6 +64,7 @@ int main(void)
     double previus = WindowManager::getTime(); 
     float dt = 0;
 
+    glRender::drawColor(0.5f, 0.5f, 1.0f, 1.0f);
     WindowManager::showWindow(true);
     while(!WindowManager::shouldClose())
     {
@@ -70,7 +73,7 @@ int main(void)
         double current = WindowManager::getTime();
         frames++;
 
-        rainoutCore::update();
+        glRender::update();
         if(current - previus <= (30.f/1.0f))
         {
             dt = (float) current-previus;

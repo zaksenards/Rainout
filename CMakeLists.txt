@@ -57,12 +57,16 @@ add_library(rainout_engine SHARED ${RAINOUT_ENGINE_SOURCES})
 target_include_directories(rainout_engine PRIVATE ${RAINOUT_INCLUDES})
 target_include_directories(rainout_engine PRIVATE ${RAINOUT_CORE_INCLUDES})
 target_link_libraries(rainout_engine rainout_render)
+target_compile_definitions(rainout_engine PRIVATE -DRAINOUT_PLATFORM_WINDOWS)
+target_compile_definitions(rainout_engine PRIVATE -DRAINOUT_IMPLEMENTATION)
 
 # Rainout launcher
 add_executable(Launcher ${CMAKE_SOURCE_DIR}/launcher/main.cpp ${RAINOUT_SOURCES})
 target_include_directories(Launcher PRIVATE ${RAINOUT_CORE_INCLUDES})
 target_include_directories(Launcher PRIVATE ${RAINOUT_INCLUDES})
 target_link_libraries(Launcher rainout_engine rainout_render)
+target_compile_definitions(Launcher PRIVATE -DRAINOUT_PLATFORM_WINDOWS)
+target_compile_definitions(Launcher PRIVATE -DRAINOUT_IMPLEMENTATION)
 
 # Rainout final game
 add_library(rainout_game SHARED ${CMAKE_SOURCE_DIR}/demos/game.cpp)

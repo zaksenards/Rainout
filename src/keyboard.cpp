@@ -4,6 +4,8 @@
 #define KEY_DOWN 1
 #define KEY_PRESS 2
 
+using rainoutCore::WindowManager;
+
 namespace rainout
 {
     bool Keyboard::isKeyDown(int vkCode)

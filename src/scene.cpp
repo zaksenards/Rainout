@@ -13,8 +13,8 @@ namespace rainout
     Entity* Scene::createEntity(Texture* texture)
     {
         Entity* entity = new Entity;
-        rainoutCore::Primitive model = 
-            rainoutCore::createPrimitive(rainoutCore::RECTANGLE_PRIMITIVE);
+        rainoutCore::glRender::glRender::glRender::Primitive model = 
+            rainoutCore::glRender::glRender::glRender::createPrimitive(rainoutCore::glRender::RECTANGLE_PRIMITIVE);
         Material material;
         Mat4f matrix = Mat4f::identity();
 
@@ -35,17 +35,17 @@ namespace rainout
     {
         for(Entity* node : nodes)
         {
-            rainoutCore::Primitive model = node->getPrimitive();
+            rainoutCore::glRender::glRender::glRender::Primitive model = node->getPrimitive();
             Material material = node->getMaterial();
             Transform transform = node->getTransform();
 
-            rainoutCore::render(model,material,transform.matrix);
+            rainoutCore::glRender::glRender::glRender::render(model,material,transform.matrix);
         }
     }
 
     void Scene::destroy()
     {
         for(int i = 0; i < nodes.size(); i++)
-            rainoutCore::deletePrimitive(nodes.at(i)->getPrimitive());
+            rainoutCore::glRender::glRender::glRender::deletePrimitive(nodes.at(i)->getPrimitive());
     }
 }

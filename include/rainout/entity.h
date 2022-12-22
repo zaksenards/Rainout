@@ -19,8 +19,8 @@ namespace rainout
             void setMaterial(Material material);
             Material getMaterial();
 
-            rainoutCore::Primitive getPrimitive();
-            void setPrimitive(rainoutCore::Primitive obj);
+            rainoutCore::glRender::Primitive getPrimitive();
+            void setPrimitive(rainoutCore::glRender::Primitive obj);
 
             void setTexture(Texture* texture);
 
@@ -32,7 +32,7 @@ namespace rainout
             Texture* m_texture;
             Material m_material;
             Transform m_transform;
-            rainoutCore::Primitive m_primitive;
+            rainoutCore::glRender::Primitive m_primitive;
     };
 }
 

@@ -25,7 +25,7 @@ namespace rainout
         return m_material;
     }
 
-    rainoutCore::Primitive Entity::getPrimitive()
+    rainoutCore::glRender::Primitive Entity::getPrimitive()
     {
         return m_primitive; 
     }
@@ -36,10 +36,10 @@ namespace rainout
             return;
 
         m_texture = texture;
-        rainoutCore::setPrimitiveTexture(&m_primitive, texture);
+        rainoutCore::glRender::setPrimitiveTexture(&m_primitive, texture);
     }
 
-    void Entity::setPrimitive(rainoutCore::Primitive primitive)
+    void Entity::setPrimitive(rainoutCore::glRender::Primitive primitive)
     {
         m_primitive = primitive;
     }
