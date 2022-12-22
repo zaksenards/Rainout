@@ -4,10 +4,10 @@
 #include <rainout/assetManager.h>
 #include <rainout/transform.h>
 #include <rainout/material.h>
+#include <rainout/keyboard.h>
 #include <rainout/matrix.h>
 #include <rainout/entity.h>
 #include <rainout/vector.h>
-#include <rainout/window.h>
 #include <rainout/scene.h>
 
 const char* ON_INIT_FUNCTION_NAME = "onInit";

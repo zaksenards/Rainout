@@ -2,8 +2,6 @@
 #define OPENGL_RENDER_H
 #include <cstdint>
 
-#define RAINOUT_IMPLEMENTATION
-#define RAINOUT_PLATFORM_WINDOWS
 #include <rainout/assetManager.h>
 #include <rainout/material.h>
 #include <rainout/vector.h>

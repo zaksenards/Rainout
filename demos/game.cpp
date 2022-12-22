@@ -3,9 +3,9 @@
 #include <cstdio>
 
 using rainout::AssetManager;
+using rainout::Keyboard;
 using rainout::Texture;
 using rainout::Entity;
-using rainout::Window;
 using rainout::Scene;
 using rainout::Vec2f;
 
@@ -31,7 +31,6 @@ struct Character
         entity->rotate(rotation, angle);
     }
 };
-
 Character* player;
 Character* banner;
 
@@ -50,12 +49,12 @@ void onStart()
 void onUpdate(float dt)
 {
     Vec2f translation;
-    translation.x = (float) -((Window::getKey(GLFW_KEY_A) - Window::getKey(GLFW_KEY_D))*0.5*dt); 
-    translation.y = (float) -((Window::getKey(GLFW_KEY_S) - Window::getKey(GLFW_KEY_W))*0.5*dt);
+    translation.x = (float) -((Keyboard::isKeyDown(GLFW_KEY_A) - Keyboard::isKeyDown(GLFW_KEY_D))*0.5*dt); 
+    translation.y = (float) -((Keyboard::isKeyDown(GLFW_KEY_S) - Keyboard::isKeyDown(GLFW_KEY_W))*0.5*dt);
 
-    if(Window::getKey(GLFW_KEY_D))
+    if(Keyboard::isKeyDown(GLFW_KEY_D))
         player->rotate(Vec2f(0.0f, 1.0f), 3.1415f);
-    else if(Window::getKey(GLFW_KEY_A))
+    else if(Keyboard::isKeyDown(GLFW_KEY_A))
         player->rotate(Vec2f(0.0f, 1.0f), 0.0f);
 
     player->move(translation);

@@ -1,5 +1,6 @@
+#include <rainout/keyboard.h>
 #include <rainout/engine.h>
-#include <rainout/window.h>
+#include <windowManager.h>
 #include <openglRender.h>
 #include <cstdlib>
 #include <cstdio>
@@ -13,7 +14,6 @@ using rainout::Vec3f;
 using rainout::Vec2f;
 using rainout::Mat4f;
 using rainout::Scene;
-using rainout::Window;
 
 int main(void)
 {
@@ -36,7 +36,7 @@ int main(void)
         return -1;
     }
 
-    if(!Window::init())
+    if(!WindowManager::init())
     {
         fprintf(stderr, "Can't initialize window\n");
         return -1;
@@ -44,13 +44,13 @@ int main(void)
 
     int windowWith = 800, windowHeight = 600;
     onInit(&windowWith, &windowHeight);
-    if(!Window::createWindow(windowWith, windowHeight, "Rainout"))
+    if(!WindowManager::createWindow(windowWith, windowHeight, "Rainout"))
     {
         fprintf(stderr, "Can't create window\n");
         return -1;
     }
 
-    if(!rainoutCore::init(Window::getAddress()))
+    if(!rainoutCore::init(WindowManager::getAddress()))
     {
         fprintf(stderr, "Can't initialize Renderer\n");
         return -1;
@@ -59,15 +59,15 @@ int main(void)
     onStart();
 
     int frames = 0;
-    double previus = Window::getTime(); 
+    double previus = WindowManager::getTime(); 
     float dt = 0;
 
-    Window::showWindow(true);
-    while(!Window::shouldClose())
+    WindowManager::showWindow(true);
+    while(!WindowManager::shouldClose())
     {
-        Window::update();
+        WindowManager::update();
 
-        double current = Window::getTime();
+        double current = WindowManager::getTime();
         frames++;
 
         rainoutCore::update();
@@ -79,11 +79,11 @@ int main(void)
             Scene::render();
         }
         onUpdate(dt);
-        Window::swapBuffers();
+        WindowManager::swapBuffers();
     }
 
     Scene::destroy();
     onStop();
-    Window::stop();
+    WindowManager::stop();
     return 0;
 }
