@@ -69,7 +69,7 @@ target_compile_definitions(Launcher PRIVATE -DRAINOUT_PLATFORM_WINDOWS)
 target_compile_definitions(Launcher PRIVATE -DRAINOUT_IMPLEMENTATION)
 
 # Rainout final game
-add_library(rainout_game SHARED ${CMAKE_SOURCE_DIR}/demos/game.cpp)
+add_library(rainout_game SHARED ${CMAKE_SOURCE_DIR}/demos/pong.cpp)
 target_include_directories(rainout_game PRIVATE ${RAINOUT_INCLUDES})
 target_include_directories(rainout_game PRIVATE ${RAINOUT_CORE_INCLUDES})
 target_include_directories(rainout_game PRIVATE ${RAINOUT_INCLUDES})

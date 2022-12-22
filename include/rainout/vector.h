@@ -28,7 +28,7 @@ namespace rainout
 
         Vec2f negative()
         {
-            Vec2f(-x,-y);
+            return Vec2f(-x,-y);
         }
 
         void operator=(Vec2f right)
@@ -52,6 +52,16 @@ namespace rainout
         Vec2f operator-(Vec2f right)
         {
             return Vec2f(x-right.x, y-right.y);
+        }
+
+        Vec2f operator*(Vec2f right)
+        {
+            return Vec2f(x*right.x, y*right.y);
+        }
+
+        Vec2f operator*(float right)
+        {
+            return Vec2f(x*right, y*right);
         }
     };
 

@@ -19,13 +19,16 @@ namespace rainout
         Mat4f matrix = Mat4f::identity();
 
         Transform transform;
+        transform.scale = Vec2f(0.06, 0.06);
         material.color = Vec3f(1.0f, 0.0f, 0.0f);
 
         transform.matrix = matrix;
         entity->setTransform(transform);
+        entity->scale(Vec2f(0.05f, 0.05f));
         entity->setMaterial(material);
         entity->setPrimitive(model);
         entity->setTexture(texture);
+        entity->setColidible(false);
         nodes.push_back(entity);
 
         return entity;

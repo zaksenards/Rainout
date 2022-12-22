@@ -61,6 +61,8 @@ void onUpdate(float dt)
         player->rotate(Vec2f(0.0f, 1.0f), 0.0f);
 
     player->move(translation);
+    if(player->entity->isColliding(banner->entity))
+        player->move(translation.negative());
 }
 
 void onStop()
