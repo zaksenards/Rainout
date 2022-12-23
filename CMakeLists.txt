@@ -14,6 +14,8 @@ set(RAINOUT_INCLUDES ${CMAKE_SOURCE_DIR}/include/)
 set(RAINOUT_3RDPARTY ${CMAKE_SOURCE_DIR}/3rdparty)
 
 set(RAINOUT_SOURCE_DIR ${CMAKE_SOURCE_DIR}/src)
+set(RAINOUT_DEBUG_DIR ${CMAKE_SOURCE_DIR}/build/debug)
+set(RAINOUT_BINARY_DIR ${CMAKE_SOURCE_DIR}/bin)
 
 if(MSVC)
     add_compile_definitions(-DRAINOUT_PLATFORM_WINDOWS)
@@ -68,9 +70,14 @@ target_link_libraries(Launcher rainout_engine rainout_render)
 target_compile_definitions(Launcher PRIVATE -DRAINOUT_PLATFORM_WINDOWS)
 target_compile_definitions(Launcher PRIVATE -DRAINOUT_IMPLEMENTATION)
 
-# Rainout final game
-add_library(rainout_game SHARED ${CMAKE_SOURCE_DIR}/demos/pong.cpp)
-target_include_directories(rainout_game PRIVATE ${RAINOUT_INCLUDES})
-target_include_directories(rainout_game PRIVATE ${RAINOUT_CORE_INCLUDES})
-target_include_directories(rainout_game PRIVATE ${RAINOUT_INCLUDES})
-target_link_libraries(rainout_game rainout_engine)
+add_custom_command(
+    TARGET Launcher 
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${RAINOUT_BINARY_DIR}
+    COMMAND ${CMAKE_COMMAND} -E copy ${RAINOUT_DEBUG_DIR}/Launcher.exe ${RAINOUT_BINARY_DIR}/Launcher.exe
+    COMMAND ${CMAKE_COMMAND} -E copy ${RAINOUT_DEBUG_DIR}/rainout_engine.dll ${RAINOUT_BINARY_DIR}/rainout_engine.dll
+    COMMAND ${CMAKE_COMMAND} -E copy ${RAINOUT_DEBUG_DIR}/rainout_render.dll ${RAINOUT_BINARY_DIR}/rainout_render.dll
+)
+
+add_subdirectory(${CMAKE_SOURCE_DIR}/demos/pong/)
+add_subdirectory(${CMAKE_SOURCE_DIR}/demos/controller/)

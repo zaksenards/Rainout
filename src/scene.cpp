@@ -42,7 +42,13 @@ namespace rainout
             Material material = node->getMaterial();
             Transform transform = node->getTransform();
 
-            rainoutCore::glRender::glRender::glRender::render(model,material,transform.matrix);
+            Mat4f matrix = transform.matrix; 
+            matrix = Mat4f::rotate(matrix, Vec3f(1.0f, 0.0f, 0.0f), transform.rotation.x);
+            matrix = Mat4f::rotate(matrix, Vec3f(0.0f, 1.0f, 0.0f), transform.rotation.y);
+            matrix = Mat4f::scale(matrix, transform.scale);
+            matrix = Mat4f::translate(matrix, transform.position);
+
+            rainoutCore::glRender::glRender::glRender::render(model,material,matrix);
         }
     }
 

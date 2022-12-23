@@ -45,8 +45,8 @@ void onInit(GameSettings* settings)
 
 void onStart()
 {
-    player = new Character("res/Player.bmp", Vec2f(0.0f, 0.0f));
-    banner = new Character("res/red.bmp", Vec2f(-0.3f, -0.3f));
+    player = new Character("assets/Player.bmp", Vec2f(0.0f, 0.0f));
+    banner = new Character("assets/red.bmp", Vec2f(-0.3f, -0.3f));
 }
 
 void onUpdate(float dt)

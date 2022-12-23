@@ -1,6 +1,8 @@
 #include <rainout/utils.h>
 #include <openglRender.h>
 #include <glad/glad.h>
+#include <wglext.h>
+#include <glext.h>
 #include <cstdlib>
 #include <cstdio>
 
@@ -12,6 +14,35 @@ struct
 
 using rainout::Texture;
 
+char* vertexSource = "\n\
+#version 330 core\n\
+layout (location = 0) in vec3 vPos;\n\
+layout (location = 1) in vec2 textCord;\n\
+uniform mat4 transform;\n\
+out vec2 TextCord;\n\
+void main()\n\
+{\n\
+    gl_Position = transform * vec4(vPos, 1.0);\n\
+    TextCord = textCord;\n\
+}\
+";
+
+char* fragmentSource = "\n\
+#version 330 core\n\
+uniform vec4 vColor = vec4(0.5, 0.3, 0.7, 1.0);\n\
+uniform bool useTexture = false;\n\
+in vec2 TextCord;\n\
+out vec4 fColor;\n\
+uniform sampler2D s_texture;\n\
+void main()\n\
+{\n\
+    if(useTexture)\n\
+        fColor = texture(s_texture, TextCord);\n\
+    else\n\
+        fColor = vColor;\n\
+}\n\
+";
+
 namespace rainoutCore
 {
     bool glRender::init(void* proc)
@@ -19,17 +50,29 @@ namespace rainoutCore
         if(!gladLoadGLLoader((GLADloadproc)proc))
             return false;
 
-        char* vshader = rainout::Utils::loadFileToBuffer("res/vertex.glsl");
-        char* fshader = rainout::Utils::loadFileToBuffer("res/fragment.glsl");
+        char* vshader = rainout::Utils::loadFileToBuffer("assets/vertex.glsl");
+        char* fshader = rainout::Utils::loadFileToBuffer("assets/fragment.glsl");
 
-        uint32_t vertex = compileShader(VERTEX_SHADER_TYPE, vshader);
-        uint32_t fragment = compileShader(FRAGMENT_SHADER_TYPE, fshader);
+        uint32_t vertex, fragment;
+        if(!vshader || !fshader)
+        {
+            vertex = compileShader(VERTEX_SHADER_TYPE, vertexSource);
+            fragment = compileShader(FRAGMENT_SHADER_TYPE, fragmentSource);
+        }else{
+            vertex = compileShader(VERTEX_SHADER_TYPE, vshader);
+            fragment = compileShader(FRAGMENT_SHADER_TYPE, fshader);
+        }
+
         if(!glIsShader(vertex) || !glIsShader(fragment))
             //TODO: Log an error here
             return false;
 
         _shared.vertex = vertex;
         _shared.fragment = fragment;
+
+        glEnable(GL_TEXTURE_2D);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
 
         return true;
     }
@@ -116,7 +159,7 @@ namespace rainoutCore
         int width = texture->width;
         int height = texture->height;
 
-        GLenum textureFormat = GL_RGBA;
+        GLenum textureFormat = GL_BGRA;
         GLenum textureType = GL_UNSIGNED_BYTE;
 
         switch(texture->bitCount)
@@ -137,7 +180,7 @@ namespace rainoutCore
 
         if(data)
         {
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, textureFormat, textureType, data);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, textureFormat, textureType, data);
             glGenerateMipmap(GL_TEXTURE_2D);
         }
 

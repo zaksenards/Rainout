@@ -8,7 +8,7 @@ a smol OpenGL 2D game engine
     - [X] Implement a basic texture system
     - [ ] Support 24 and 32 bit images
     - [ ] Support more image file formats
-    - [ ] Support transparent textures
+    - [X] Support transparent textures
 - [ ] Collision System  
     - [X] Basic collision system
     - [ ] Rigid Body  
@@ -25,4 +25,4 @@ a smol OpenGL 2D game engine
     - [X] Move bitmap header and Texture definitions to Resource manager header
     - [X] Fix wrong color format when loading images  
 
-- [ ] Scale matrix reseted when translating entity
+- [X] Scale matrix reseted when translating entity

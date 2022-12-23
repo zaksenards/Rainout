@@ -10,12 +10,12 @@ using rainout::Scene;
 using rainout::Vec2f;
 using rainout::Vec3f;
 
-struct Character
+struct Tile
 {
     Entity* entity;
     Texture* texture;
 
-    Character(const char* text, Vec2f translation)
+    Tile(const char* text, Vec2f translation)
     {
         texture = AssetManager::loadTexture(text);
         entity = Scene::createEntity(texture);
@@ -37,7 +37,7 @@ struct Character
         entity->scale(scale);
     }
 
-    bool isColliding(Character* right)
+    bool isColliding(Tile* right)
     {
         return entity->isColliding(right->entity);
     }
@@ -45,9 +45,10 @@ struct Character
 
 Vec2f ballDirection = Vec2f(-1, 0);
 float ballSpeed = 0.5f;
-Character* player1;
-Character* player2;
-Character* ball;
+Tile* background;
+Tile* player1;
+Tile* player2;
+Tile* ball;
 
 void onInit(GameSettings* settings)
 {
@@ -59,12 +60,14 @@ void onInit(GameSettings* settings)
 
 void onStart()
 {
-    player1 = new Character("res/paddle.bmp", Vec2f(-0.8f, 0.0f));
-    player2 = new Character("res/paddle.bmp", Vec2f( 0.8f, 0.0f));
+    background = new Tile("assets/background.bmp", Vec2f(0,0));
+    player1 = new Tile("assets/paddle.bmp", Vec2f(-0.8f, 0.0f));
+    player2 = new Tile("assets/paddle.bmp", Vec2f( 0.8f, 0.0f));
 
-    ball = new Character("res/ball.bmp", Vec2f(-0.f, -0.f));
+    ball = new Tile("assets/ball.bmp", Vec2f(-0.f, -0.f));
     player1->scale(Vec2f(0.04f, 0.4f));
     player2->scale(Vec2f(0.04f, 0.4f));
+    background->scale(Vec2f(1.0f, 1.0f));
 
 }
 

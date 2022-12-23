@@ -23,8 +23,8 @@ namespace rainout
 
         static Mat4f scale(Mat4f m, Vec2f scale)
         {
-            m.e[0][0] = scale.x;
-            m.e[1][1] = scale.y;
+            m.e[0][0] = m.e[0][0]*scale.x;
+            m.e[1][1] = m.e[1][1]*scale.y;
             return m;
         }
 
@@ -50,8 +50,8 @@ namespace rainout
             m.e[1][2] = rotation.y*rotation.z*d+rotation.x*s;
                     
             m.e[2][0] = -rotation.z*rotation.z*d+rotation.y*s;
-            m.e[2][1] = rotation.z*rotation.y*d-rotation.x*s;
-            m.e[2][2] = rotation.z*rotation.z*d+c;
+            m.e[2][1] =  rotation.z*rotation.y*d-rotation.x*s;
+            m.e[2][2] =  rotation.z*rotation.z*d+c;
 
             return m;
         }
