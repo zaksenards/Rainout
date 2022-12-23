@@ -14,7 +14,7 @@ a smol OpenGL 2D game engine
     - [ ] Rigid Body  
     - [ ] Static Body  
     - [ ] Kinematic Body  
-- [ ] Game module System  
+- [X] Game module System  
 - [ ] Camera system
 - [ ] GridMap system
 - [ ] Light System
@@ -25,4 +25,4 @@ a smol OpenGL 2D game engine
     - [X] Move bitmap header and Texture definitions to Resource manager header
     - [X] Fix wrong color format when loading images  
 
-- [X] Scale matrix reseted when translating entity
+- [X] Wrong transformation order
