@@ -1,6 +1,8 @@
 #include <openglRender.h>
 #include <rainout/scene.h>
 
+using rainoutCore::glRender;
+
 namespace rainout
 {
     std::vector<Entity*> nodes;
@@ -13,8 +15,7 @@ namespace rainout
     Entity* Scene::createEntity(Texture* texture)
     {
         Entity* entity = new Entity;
-        rainoutCore::glRender::glRender::glRender::Primitive model = 
-            rainoutCore::glRender::glRender::glRender::createPrimitive(rainoutCore::glRender::RECTANGLE_PRIMITIVE);
+        glRender::Primitive model = glRender::createPrimitive();
         Material material;
         Mat4f matrix = Mat4f::identity();
 
@@ -38,7 +39,7 @@ namespace rainout
     {
         for(Entity* node : nodes)
         {
-            rainoutCore::glRender::glRender::glRender::Primitive model = node->getPrimitive();
+            glRender::Primitive model = node->getPrimitive();
             Material material = node->getMaterial();
             Transform transform = node->getTransform();
 
@@ -48,13 +49,13 @@ namespace rainout
             matrix = Mat4f::scale(matrix, transform.scale);
             matrix = Mat4f::translate(matrix, transform.position);
 
-            rainoutCore::glRender::glRender::glRender::render(model,material,matrix);
+            glRender::render(model,material,matrix);
         }
     }
 
     void Scene::destroy()
     {
         for(int i = 0; i < nodes.size(); i++)
-            rainoutCore::glRender::glRender::glRender::deletePrimitive(nodes.at(i)->getPrimitive());
+            glRender::deletePrimitive(nodes.at(i)->getPrimitive());
     }
 }

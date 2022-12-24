@@ -43,6 +43,10 @@ void main()\n\
 }\n\
 ";
 
+#define VERTEX_ARRAY_INDEX 0
+#define TEXTURE_CORDINATES_INDEX 1
+
+
 namespace rainoutCore
 {
     bool glRender::init(void* proc)
@@ -64,8 +68,10 @@ namespace rainoutCore
         }
 
         if(!glIsShader(vertex) || !glIsShader(fragment))
-            //TODO: Log an error here
+        {
+            fprintf(stderr, "Can't initialize engine: Invalid shaders\n");
             return false;
+        }
 
         _shared.vertex = vertex;
         _shared.fragment = fragment;
@@ -88,14 +94,11 @@ namespace rainoutCore
         glClearColor(R,G,B,A);
     }
 
-    glRender::Primitive glRender::createPrimitive(uint8_t primitiveType)
+    glRender::Primitive glRender::createPrimitive()
     {
         uint32_t vbo, vao, ebo;
         glGenVertexArrays(1, &vao);
         glBindVertexArray(vao);
-
-        //TODO: Remove this shit
-        primitiveType = 0;
 
         float vertices[20] = 
         {
@@ -116,11 +119,11 @@ namespace rainoutCore
 
         glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void*)0);
-        glEnableVertexAttribArray(0);
+        glEnableVertexAttribArray(VERTEX_ARRAY_INDEX);
 
         // Texture cordinates
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void*)(3*sizeof(float)));
-        glEnableVertexAttribArray(1);
+        glEnableVertexAttribArray(TEXTURE_CORDINATES_INDEX);
 
         glGenBuffers(1, &ebo);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
@@ -142,6 +145,15 @@ namespace rainoutCore
 
     void glRender::setPrimitiveTexture(Primitive* primitive, Texture* texture)
     {
+        if(!primitive)
+            return;
+
+        if(!texture)
+        {
+            fprintf(stderr, "Can't update primitive texture. Is this a valid texture pointer?\n");
+            return;
+        }
+
         uint32_t text;
         glGenTextures(1, &text);
         glBindTexture(GL_TEXTURE_2D, text);
@@ -161,6 +173,12 @@ namespace rainoutCore
 
         GLenum textureFormat = GL_BGRA;
         GLenum textureType = GL_UNSIGNED_BYTE;
+
+        if(!data)
+        {
+            fprintf(stderr, "Can't update primitive texture. Texture data not found\n");
+            return;
+        }
 
         switch(texture->bitCount)
         {
@@ -183,7 +201,6 @@ namespace rainoutCore
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, textureFormat, textureType, data);
             glGenerateMipmap(GL_TEXTURE_2D);
         }
-
 
         primitive->text = text; 
     }
@@ -223,6 +240,28 @@ namespace rainoutCore
 
     uint32_t glRender::compileShader(uint8_t shaderType, char* source)
     {
+        char* chaderID = "";
+        switch(shaderType)
+        {
+            case VERTEX_SHADER_TYPE:
+                chaderID = (char*)"VERTEX SHADER";
+                break;
+            case FRAGMENT_SHADER_TYPE:
+                chaderID = (char*)"FRAGMENT SHADER";
+                break;
+            default:
+            {
+                fprintf(stderr, "Can't compiler shader: Invalid shader type");
+                return 0;
+            }
+        }
+
+        if(!source)
+        {
+            fprintf(stderr, "Can't compile shader of type %s: Invalid shader source",chaderID);
+            return 0;
+        }
+
         GLenum type;
         switch(shaderType)
         {
@@ -247,7 +286,7 @@ namespace rainoutCore
         if(!success)
         {
             glGetShaderInfoLog(shader, 512, NULL, infoLog);
-            fprintf(stderr, "Can't compile shader of type %u: %s\n",shaderType, infoLog);
+            fprintf(stderr, "Can't compile shader of type %s: %s\n",chaderID, infoLog);
             glDeleteShader(shader);
             return 0;
         }

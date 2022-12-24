@@ -33,11 +33,6 @@ namespace rainoutCore
             FRAGMENT_SHADER_TYPE = 1
         };
 
-        enum
-        {
-            RECTANGLE_PRIMITIVE = 1
-        };
-
         struct Primitive
         {
             uint32_t text;
@@ -53,7 +48,7 @@ namespace rainoutCore
         static uint32_t compileShader(uint8_t shaderType, char* source);
         static uint32_t compileProgram(uint32_t vertex, uint32_t fragment);
 
-        static Primitive createPrimitive(uint8_t type);
+        static Primitive createPrimitive();
         static void deletePrimitive(Primitive primitive);
         static void setPrimitiveTexture(Primitive* primitive, rainout::Texture* texture);
 

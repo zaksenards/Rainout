@@ -24,7 +24,6 @@ namespace rainout
 
         if(!bytes)
         {
-           //TODO: Log error in debug mode 
            delete buffer;
            return nullptr;
         }
@@ -53,7 +52,6 @@ namespace rainout
 
         if(!bytes)
         {
-           //TODO: Log error in debug mode 
            delete buffer;
            return nullptr;
         }

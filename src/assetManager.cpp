@@ -10,7 +10,11 @@ namespace rainout
     {
         char* binary = Utils::loadBinaryToBuffer(filePath);
         if(!binary)
+        {
+            fprintf(stderr, "Can't load file: %s",filePath);
             return nullptr;
+        }
+
         BitmapHeader* bitmap = (BitmapHeader*)binary;
         if(bitmap->signature != BITMAP_SIGNATURE)
         {
