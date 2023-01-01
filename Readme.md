@@ -3,7 +3,7 @@
 a smol OpenGL 2D game engine  
 
 # Assets
-[Character controller assets](https://tienlev.itch.io/slime-pixel-set)  
+[Character controller assets](https://caz-creates-games.itch.io/ghost)  
 [Space Shooter assets](https://opengameart.org/content/150kmph-3color-palette-aircraft)  
 
 ## TODO
