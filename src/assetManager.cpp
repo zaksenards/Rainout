@@ -11,36 +11,62 @@ namespace rainout
         char* binary = Utils::loadBinaryToBuffer(filePath);
         if(!binary)
         {
-            fprintf(stderr, "Can't load file: %s",filePath);
-            return nullptr;
+            fprintf(stderr, "can't load file: %s",filePath);
+            return new Texture();
         }
 
         BitmapHeader* bitmap = (BitmapHeader*)binary;
         if(bitmap->signature != BITMAP_SIGNATURE)
         {
-            fprintf(stderr, "File: %s is not a bitmap\n",filePath);
+            fprintf(stderr, "file: %s is not a bitmap\n",filePath);
             delete binary;
-            return nullptr;
+            return new Texture();
         }
 
         if(bitmap->compression != 3)
         {
-            fprintf(stderr, "Can't load bitamp %s with compressio\n",filePath);
+            fprintf(stderr, "can't load bitamp %s with compressio\n",filePath);
             delete binary;
-            return nullptr;
+            return new Texture();
         }
 
-        Texture* texture = new Texture;
-        texture->width = bitmap->width;
-        texture->height = bitmap->height;
-        texture->bitCount = bitmap->bitCount;
-        texture->data = binary+bitmap->dataOffset;
+        Texture* texture = new Texture((char*)bitmap+bitmap->dataOffset, bitmap->width, bitmap->height, bitmap->bitCount, false, 1, bitmap->width, bitmap->height);
 
         return texture;
     }
 
-    void AssetManager::destroyTexture(Texture* texture)
+    Texture* AssetManager::loadAnimatedTexture(const char* filePath, uint8_t frames, uint8_t frameWidth, uint8_t frameHeight)
     {
+        char* binary = Utils::loadBinaryToBuffer(filePath);
+        if(!binary)
+        {
+            fprintf(stderr, "can't load file: %s",filePath);
+            return new Texture();
+        }
+
+        BitmapHeader* bitmap = (BitmapHeader*)binary;
+        if(bitmap->signature != BITMAP_SIGNATURE)
+        {
+            fprintf(stderr, "file: %s is not a bitmap\n",filePath);
+            delete binary;
+            return new Texture();
+        }
+
+        if(bitmap->compression != 3)
+        {
+            fprintf(stderr, "can't load bitamp %s with compressio\n",filePath);
+            delete binary;
+            return new Texture();
+        }
+
+        Texture* texture = new Texture((char*)bitmap+bitmap->dataOffset, bitmap->width, bitmap->height, bitmap->bitCount, true, frames, frameWidth, frameHeight);
+
+        return texture;
+    }
+
+    void AssetManager::deleteTexture(Texture* texture)
+    {
+        delete texture->getData();
         delete texture;
     }
 }

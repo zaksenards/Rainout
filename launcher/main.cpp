@@ -62,8 +62,8 @@ int main(void)
     onStart();
 
     int frames = 0;
-    double previus = WindowManager::getTime(); 
-    float dt = 0;
+    float previus = (float)WindowManager::getTime(); 
+    float dt = 0.0f;
 
     glRender::drawColor(settings.backColor);
     WindowManager::showWindow(true);
@@ -71,7 +71,7 @@ int main(void)
     {
         WindowManager::update();
 
-        double current = WindowManager::getTime();
+        float current = (float)WindowManager::getTime();
         frames++;
 
         glRender::update();

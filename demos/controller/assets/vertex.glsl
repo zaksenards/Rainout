@@ -11,5 +11,5 @@ out vec2 TextCord;
 void main()
 {
     gl_Position = model * vec4(vPos, 1.0);
-    TextCord = textCord * spriteScale;
+    TextCord = textCord * spriteScale + spriteIndex;
 }

@@ -1,3 +1,5 @@
+#include <rainout/matrix.h>
+#include <rainout/vector.h>
 #include <rainout/utils.h>
 #include <openglRender.h>
 #include <glad/glad.h>
@@ -13,17 +15,22 @@ struct
 }_shared;
 
 using rainout::Texture;
+using rainout::Mat4f;
+using rainout::Vec3f;
+using rainout::Vec2f;
 
 char* vertexSource = "\n\
 #version 330 core\n\
 layout (location = 0) in vec3 vPos;\n\
 layout (location = 1) in vec2 textCord;\n\
-uniform mat4 transform;\n\
+uniform vec2 spriteIndex;\n\
+uniform vec2 spriteScale;\n\
+uniform mat4 model;\n\
 out vec2 TextCord;\n\
 void main()\n\
 {\n\
-    gl_Position = transform * vec4(vPos, 1.0);\n\
-    TextCord = textCord;\n\
+    gl_Position = model * vec4(vPos, 1.0);\n\
+    TextCord = textCord * spriteScale + spriteIndex;\n\
 }\
 ";
 
@@ -143,17 +150,8 @@ namespace rainoutCore
         return primitive;
     }
 
-    void glRender::setPrimitiveTexture(Primitive* primitive, Texture* texture)
+    int applyTexture(rainout::Texture* texture, rainoutCore::glRender::Primitive* primitive)
     {
-        if(!primitive)
-            return;
-
-        if(!texture)
-        {
-            fprintf(stderr, "Can't update primitive texture. Is this a valid texture pointer?\n");
-            return;
-        }
-
         uint32_t text;
         glGenTextures(1, &text);
         glBindTexture(GL_TEXTURE_2D, text);
@@ -167,9 +165,9 @@ namespace rainoutCore
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-        uint32_t* data = (uint32_t*)texture->data;
-        int width = texture->width;
-        int height = texture->height;
+        uint32_t* data = (uint32_t*)texture->getData();
+        int width = texture->getWidth();
+        int height = texture->getHeight();
 
         GLenum textureFormat = GL_BGRA;
         GLenum textureType = GL_UNSIGNED_BYTE;
@@ -177,10 +175,10 @@ namespace rainoutCore
         if(!data)
         {
             fprintf(stderr, "Can't update primitive texture. Texture data not found\n");
-            return;
+            return -1;
         }
 
-        switch(texture->bitCount)
+        switch(texture->getBitCount())
         {
             case 16:
                 {
@@ -203,6 +201,22 @@ namespace rainoutCore
         }
 
         primitive->text = text; 
+        return 1;
+    }
+
+    void glRender::setPrimitiveTexture(Primitive* primitive, Texture* texture)
+    {
+        if(!primitive)
+            return;
+
+        if(!texture)
+        {
+            fprintf(stderr, "Can't update primitive texture. Is this a valid texture pointer?\n");
+            return;
+        }
+
+        if(!applyTexture(texture, primitive))
+            return;
     }
 
     void glRender::deletePrimitive(Primitive primitive)
@@ -223,19 +237,44 @@ namespace rainoutCore
 
     void glRender::render(Primitive primitive, rainout::Material material, rainout::Mat4f matrix)
     {
-        rainout::Vec3f color = material.color;
+        rainout::Texture* texture = material.texture;
+        Vec3f color = material.color;
 
         uint32_t colorIndex = glGetUniformLocation(primitive.id,"vColor");
-        uint32_t transformIndex = glGetUniformLocation(primitive.id, "transform");
         uint32_t renderTexture = glGetUniformLocation(primitive.id, "useTexture");
+
+        uint32_t modelMatrixIndex = glGetUniformLocation(primitive.id, "model");
+        uint32_t spriteScaleIndex = glGetUniformLocation(primitive.id, "spriteScale");
+        uint32_t spriteIndexIndex = glGetUniformLocation(primitive.id, "spriteIndex");
+
+
+        Vec2f textScale = Vec2f(1.0f,1.0f);
+        Vec2f textPos = Vec2f(1.0f,1.0f);
+
+        if(texture && texture->isAnimated())
+        {
+            uint8_t index = texture->getAnimationIndex();
+            uint8_t frameCount = texture->getFrameCount();
+
+            textScale = Vec2f((1.0f/frameCount), 1.0f);
+            textPos = Vec2f((1.0f/frameCount)*index, 1.0f);
+        }
 
         glUseProgram(primitive.id);
         glBindVertexArray(primitive.vao);
+
         glUniform4f(colorIndex, color.x, color.y, color.z, 1.0f);
-        glUniformMatrix4fv(transformIndex, 1, GL_FALSE, (const float*)matrix.e);
+        glUniformMatrix4fv(modelMatrixIndex, 1, GL_FALSE, (const float*)matrix.e);
+
         glUniform1i(renderTexture, primitive.text != 0);
+        glUniform2f(spriteScaleIndex, textScale.x, textScale.y);
+        glUniform2f(spriteIndexIndex, textPos.x, textPos.y);
+
         glBindTexture(GL_TEXTURE_2D, primitive.text);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+        glUseProgram(0);
+        glBindVertexArray(0);
     }
 
     uint32_t glRender::compileShader(uint8_t shaderType, char* source)

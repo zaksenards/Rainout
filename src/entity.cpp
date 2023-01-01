@@ -1,5 +1,7 @@
 #include <rainout/entity.h>
+#include <openglRender.h>
 
+using rainoutCore::glRender;
 using rainout::Transform;
 using rainout::Material;
 
@@ -35,7 +37,7 @@ namespace rainout
         if(!texture)
             return;
 
-        m_texture = texture;
+        m_material.texture = texture;
         rainoutCore::glRender::setPrimitiveTexture(&m_primitive, texture);
     }
 
@@ -91,5 +93,12 @@ namespace rainout
         bool down = myPosition.y+(myScale.y) >= otherPosition.y-(otherScale.y);
 
         return (left && right) && (top && down);
+    }
+
+    Entity::~Entity()
+    {
+        glRender::deletePrimitive(m_primitive);
+        if(m_material.texture)
+            free(m_material.texture);
     }
 }

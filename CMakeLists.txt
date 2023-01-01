@@ -30,15 +30,16 @@ set(RAINOUT_CORE_INCLUDES
 set(RAINOUT_CORE_SOURCES
     ${RAINOUT_3RDPARTY}/glad/src/glad.c
     ${RAINOUT_SOURCE_DIR}/openglRender.cpp
-    ${RAINOUT_SOURCE_DIR}/openglRender.cpp
-    ${RAINOUT_SOURCE_DIR}/utils.cpp
     ${RAINOUT_SOURCE_DIR}/windowManager.cpp
+    ${RAINOUT_SOURCE_DIR}/texture.cpp
+    ${RAINOUT_SOURCE_DIR}/utils.cpp
 )
 
 set(RAINOUT_ENGINE_SOURCES
     ${RAINOUT_SOURCE_DIR}/utils.cpp
     ${RAINOUT_SOURCE_DIR}/scene.cpp
     ${RAINOUT_SOURCE_DIR}/entity.cpp
+    ${RAINOUT_SOURCE_DIR}/texture.cpp
     ${RAINOUT_SOURCE_DIR}/keyboard.cpp
     ${RAINOUT_SOURCE_DIR}/assetManager.cpp
 )
@@ -81,3 +82,4 @@ add_custom_command(
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/demos/pong/)
 add_subdirectory(${CMAKE_SOURCE_DIR}/demos/controller/)
+add_subdirectory(${CMAKE_SOURCE_DIR}/demos/SpaceShooter/)

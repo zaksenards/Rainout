@@ -2,11 +2,15 @@
 
 a smol OpenGL 2D game engine  
 
+# Assets
+[Character controller assets](https://tienlev.itch.io/slime-pixel-set)  
+[Space Shooter assets](https://opengameart.org/content/150kmph-3color-palette-aircraft)  
+
 ## TODO
 
 - [ ] Texture System
     - [X] Implement a basic texture system
-    - [ ] Support 24 and 32 bit images
+    - [X] Support 24 and 32 bit images
     - [ ] Support more image file formats
     - [X] Support transparent textures
 - [ ] Collision System  
@@ -15,14 +19,8 @@ a smol OpenGL 2D game engine
     - [ ] Static Body  
     - [ ] Kinematic Body  
 - [X] Game module System  
+- [X] Animated sprites 
 - [ ] Camera system
 - [ ] GridMap system
 - [ ] Light System
 - [ ] Sound system
-
-## FIXME
-- [X] Texture system
-    - [X] Move bitmap header and Texture definitions to Resource manager header
-    - [X] Fix wrong color format when loading images  
-
-- [X] Wrong transformation order

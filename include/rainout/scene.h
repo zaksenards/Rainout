@@ -11,6 +11,7 @@ namespace rainout
     {
         static Entity* createEntity(Texture* texture);
         static Entity* createEntity();
+        static void removeEntity(Entity* entity);
         static void render();
         static void destroy();
     };

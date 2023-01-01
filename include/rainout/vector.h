@@ -63,6 +63,11 @@ namespace rainout
         {
             return Vec2f(x*right, y*right);
         }
+
+        bool operator==(Vec2f right)
+        {
+            return (x==right.x) && (y==right.y); 
+        }
     };
 
 
@@ -84,6 +89,11 @@ namespace rainout
             x+=right.x;
             y+=right.y; 
             z+=right.z;
+        }
+
+        bool operator==(Vec3f right)
+        {
+            return (x==right.x) && (y==right.y) && (z==right.z);
         }
     };
 }
